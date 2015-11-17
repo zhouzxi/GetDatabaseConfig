@@ -18,9 +18,9 @@ main()
     echo "ip =" $IP
     echo "port =" $PORT
 	
-	echo "[network]" >> NetworkInfo.txt
-	echo "ip=$IP" >> NetworkInfo.txt
-	echo "port=$PORT" >> NetworkInfo.txt
+    echo "[network]" >> NetworkInfo.txt
+    echo "ip=$IP" >> NetworkInfo.txt
+    echo "port=$PORT" >> NetworkInfo.txt
 
     echo "finish !!!!!!!!!!!"
 }
