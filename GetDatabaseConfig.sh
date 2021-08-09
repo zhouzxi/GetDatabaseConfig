@@ -1,29 +1,35 @@
 #!/bin/ksh
 
-CFG_FILE=$HOME/etc/Config.ini
+_CFG_FILE="${HOME}/etc/Config.ini"
 
-IP=` awk '$1~/\[.*/{_cdr_par_=0}\
-         $0 ~ /^ *\[ *network *\]/ {_cdr_par_=1}\
-         $0~/^[\011 ]*ip *=.*/ { if(_cdr_par_==1) { sub("="," "); print $2; exit 0} }\
-         ' ${CFG_FILE}`
-
-PORT=` awk '$1~/\[.*/{_cdr_par_=0}\
-          $0 ~ /^ *\[ *network *\]/ {_cdr_par_=1}\
-         $0~/^[\011 ]*port *=.*/ { if(_cdr_par_==1) { sub("="," "); print $2; exit 0} }\
-         ' ${CFG_FILE}`
-
-
-main()
-{
-    echo "ip =" $IP
-    echo "port =" $PORT
-	
-    echo "[network]" >> NetworkInfo.txt
-    echo "ip=$IP" >> NetworkInfo.txt
-    echo "port=$PORT" >> NetworkInfo.txt
-
-    echo "finish !!!!!!!!!!!"
+_get_ip(){
+	_ip=`grep 'ip' "${_CFG_FILE}"`
+	if [[ ! "${_ip}" ]]; then
+		echo "can't get ip"
+		_ip='null'
+	else
+		_ip="${_ip##*=}"
+	fi
 }
 
-## Execute main function
-main $*
+_get_port(){
+	_port=`grep 'port' "${_CFG_FILE}"`
+	if [[ ! "${_port}" ]]; then
+		echo "can't get port"
+		_port='null'
+	else
+		_port="${_port##*=}"
+	fi
+}
+
+_run(){
+	_get_ip
+	_get_port
+	echo "ip = ${_ip}"
+	echo "port = ${_port}"
+	echo "[network]" > ./NetworkInfo.txt
+	echo "ip=${_ip}" >> ./NetworkInfo.txt
+	echo "port=${_port}" >> ./NetworkInfo.txt
+}
+
+_run $*
